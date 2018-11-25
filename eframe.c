@@ -31,35 +31,15 @@
 	*
 	*	@todo 		改进目标：用哈希（散列函数）代替一维数组。
 	*/
-#include "teframe.h"	
+#include "eframe.h"	
 
-u8 EVENT_MOUNT = 0;
 
-/*  */
+/* proc函数都注册到此数组  */
 PROCTYPE  proc_queue[MAX_PROC_AMOUNT] = {0};//响应函数数组
 
+// 事件没有对应的响应程序的时候执行该函数
 PROC proc_null(void)
 {
-	// 事件没有对应的响应程序的时候执行该函数
     printf("null process func\n");
 	return NO_PROC;
 }
-
-
-/* 
- * @breif: 获得事件对应的响应程序
- * @notice: 为了提高效率，可以直接使用数组
- */
-
-// 
-/** 改在头文件里以宏定义实现
-PROCTYPE get_proc(EVENTTYPE event)
-{	
-	// 运行时错误检查
-	//if(proc_queue[event]){
-	//	return proc_queue[event];
-	//};
-	//return proc_null;
-	return proc_queue[event] ? proc_queue[event] : proc_null;
-}
-*/
