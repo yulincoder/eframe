@@ -10,15 +10,14 @@
  *
  * 开发注意：多多参考osal
  */
- #include <stdio.h>
- 
- 
+#include <stdio.h> // For PC
+  
  
  /*
   * @API List：
 	*						bind_proc(event,proc)		//绑定事件与相响应程序
 	*						void proc_null(void)		//未绑定响应程序的事件的默认处理程序
-	*						PROCTYPE get_proc(EVENTTYPE event) //获得事件的响应程序
+	*						PROCTYPE event_proc(EVENTTYPE event) //获得事件的响应程序(在eframe.h中宏定义)
 	*
 	* @breif: 
 	*						为保证程序效率，响应程序与事件之间直接通过数组对应，这样做的
@@ -40,6 +39,6 @@ PROCTYPE  proc_queue[MAX_PROC_AMOUNT] = {0};//响应函数数组
 // 事件没有对应的响应程序的时候执行该函数
 PROC proc_null(void)
 {
-    printf("null process func\n");
-	return NO_PROC;
+    printf("null process func\n"); // For PC
+    return NO_PROC;
 }

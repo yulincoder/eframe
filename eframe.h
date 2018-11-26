@@ -20,7 +20,7 @@ typedef PROC (*PROCTYPE)(void);
 // 预定义事件类型, 具体事件变量需要使用event_bind(e, n)与预定义事件绑定
 // 因为框架内部都使用预定义事件类型,
 typedef enum EVENT_NUM {
-  NULL_EVENT = 0,
+  NONE_EVENT = 0,
   EVENT_1,
   EVENT_2,
   EVENT_3,
@@ -50,9 +50,9 @@ extern PROCTYPE  proc_queue[MAX_PROC_AMOUNT];
  * 响应函数与事件绑定
  */
 #define proc_bind(event, proc) \
-				do{ \
-					proc_queue[event] = proc; \
-				}while(0)
+do { \
+    proc_queue[event] = proc; \
+   } while(0)
 
 /**
  * 获取事件对应的处理进程
@@ -63,5 +63,8 @@ extern PROC proc_null(void); // 空处理函数
 /** 
  * 根据事件,调用处理事件的过程回调函数
  */
-#define event_proc(event) (proc_queue[event] ? proc_queue[event] : proc_null)()
+#define event_proc(event)\
+do {\
+    (proc_queue[event] ? proc_queue[event] : proc_null)();\
+   } while(0)
 #endif // __TFRAME_H__
