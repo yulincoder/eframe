@@ -1,30 +1,23 @@
 /**************************************************
  * 嵌入式事件驱动框架
- * 目标: 1.框架支持一套较为完整的系统debug方案
  *			 4.增加一个运行时监测调试方案
  * 			 5. ...
  *
  */
-#include <stdio.h> // For PC
-  
  
  /*
   * @API List：
     *                       efPROC(eventname) 定义事件处理handler
-	*		                ef_setevent(EVENTTYPE event, num) //设置用户事件编号
+	*		                ef_setevent(event_t event, num) //设置用户事件编号
     *                       ef_bindhandler(event, handler)		//绑定事件与相响应程序
-	*						handle_event(EVENTTYPE event) //根据事件执行handler函数(在eframe.h中宏定义)
+	*						handle_event(event_t event) //根据事件执行handler函数(在eframe.h中宏定义)
 	*
-	* @breif: 
-	*						为保证程序效率，响应程序与事件之间直接通过数组对应
-	*	@todo 		改进目标：用哈希（散列函数）代替一维数组。
 	*/
 #include "eframe.h"	
 
 
 /* handler函数都注册到此数组  */
-PROCTYPE  ef_handler_list[MAX_HANDLER_AMOUNT] = {0};//事件处理函数数组
-EVENTTYPE ef_eventqueue[MAX_EVENT_QUEUELEN] = {0}; // 待处理事件队列
+handler_t  ef_handler_list[MAX_HANDLER_AMOUNT] = {0};//事件处理函数数组
 
 // 事件没有对应的响应程序的时候执行该函数
 efPROC(ef_handle_null)
@@ -33,26 +26,55 @@ efPROC(ef_handle_null)
     printf("null process function\n"); // For PC
 }
 
-static u8 ef_eventqueue_idx = 0;
 
 /* 
- * 插入一个事件到队尾,插入失败返回1,否则返回1
+ * 事件队列部分
+ * ef_queue_size() 队列元素长度
+ * ef_queue_add(event)  队尾追加
+ * ef_queue_poll()  取队头
  */
-u8 ef_event_add(EVENTTYPE e)
-{ 
-  if(ef_eventqueue_idx >= MAX_EVENT_QUEUELEN)
-    return 1;
-  
-  atomic(
-         ef_eventqueue[ef_eventqueue_idx++] = e;
-         );
-  return 0;
+event_t ef_eventqueue[REAL_LEN] = {0}; // 待处理事件队列
+
+static event_t _tail = 0;
+static event_t _head = 0;
+
+#define ef_queue_size() (_tail >= _head ? _tail - _head: REAL_LEN - _head + _tail)
+
+err_t ef_queue_add(event_t e)
+{
+  u8 temp_tail = _tail + 1 == REAL_LEN ? 0 : _tail + 1;
+  if(ef_queue_size() == REAL_LEN - 1) {
+    return FAIL;
+  }    
+  ef_eventqueue[_tail = temp_tail] = e;
+  return SUCCESS;
 }
 
-// 设计查找插入复杂度都为1的队列
-EVENTTYPE ef_event_poll()
+event_t ef_queue_poll()
 {
-  if(ef_eventqueue_idx == 0)
+  u8 temp_head = _head + 1 == REAL_LEN ? 0 : _head + 1;
+  if(!ef_queue_size()){
     return EFNONE_EVENT;
-  return ef_eventqueue[ef_eventqueue_idx];
+  }
+  return ef_eventqueue[_head = temp_head];  
 }
+
+// 事件触发部分
+err_t ef_post(event_t e)
+{
+  err_t err = SUCCESS;
+  atomic(
+         err = ef_queue_add(e);
+  );
+  return err;
+}
+
+void ef_schedule_run(void)
+{
+  event_t e = EFNONE_EVENT;
+  while((e = ef_queue_poll()) != EFNONE_EVENT) {
+    ef_handle_event(e);
+  }
+  ef_idle();
+}
+

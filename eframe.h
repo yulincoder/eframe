@@ -1,42 +1,33 @@
 #ifndef __EFRAME_H__
 #define  __EFRAME_H__
+#include <stdio.h> // For PC
 
 typedef unsigned int u16;  
 typedef unsigned char u8;
-// typedef u8 efPROC;
-
-/*EN
- *
- */
+typedef u8 event_t;
+typedef enum{
+  SUCCESS = 0,
+  FAIL
+} err_t;
  
 /*CH
- * 这决定了每个事件的响应函数的返回值都必须是PROC(u8)类型。。
- * 日后可能需要加入响应函数的上下文机制，同步机制，到时候得要有返回值。
+ * 事件handler函数为void xx(void)
  */
 #define efPROC(event) void event(void) // 定义事件处理函数的方式
-typedef void (*PROCTYPE)(void);   
+typedef void (*handler_t)(void);   
 
 #define MAX_HANDLER_AMOUNT 10 // 最大处理事件过程数量
-#define MAX_EVENT_QUEUELEN 5 // 待处理事件队列长度
 
-// 预定义事件类型, 具体事件变量需要使用event_bind(e, n)与预定义事件绑定
-// 因为框架内部都使用预定义事件类型,
-typedef enum EVENT_NUM {
-  EFNONE_EVENT = 0,
-  EFEVENT_1,
-  EFEVENT_2,
-  EFEVENT_3,
-  EFEVENT_4,
-  EFEVENT_5,
-  EFEVENT_6,
-  EFEVENT_7,
-  EFEVENT_8,
-  EFEVENT_9,    
-} EVENTTYPE;
-  
-// 这里绑定仅仅是一个赋值过程,因此事件定义需要在全局范围内
-// 最后应该支持事件动态注册和删除 
-#define ef_setevent(e, n) EVENTTYPE e = EFEVENT_##n;  // 设置用户定义事件绑定到预定义事件
+#define MAX_QUEUE 10
+// 队列头结点为哨兵,因此实际队列长度为有效数据长度+1
+#define REAL_LEN MAX_QUEUE + 1 // 待处理事件队列长度
+
+// 0作为无事件
+#define EFNONE_EVENT 0
+static event_t event_cnt = EFNONE_EVENT;
+
+// 初始化事件变量, 每次获得一个事件ID
+#define ef_event_init() ++event_cnt
 
 /* 响应函数返回的状态码 */
 #define DEFAULT 0  //默认状态码（无意义）
@@ -45,7 +36,7 @@ typedef enum EVENT_NUM {
 /**
  * 响应程序队列
  */
-extern PROCTYPE ef_handler_list[MAX_HANDLER_AMOUNT];
+extern handler_t ef_handler_list[MAX_HANDLER_AMOUNT];
 
 
 /**
@@ -84,6 +75,6 @@ do {\
   printf("exit atomic regeion\n");\
 } while(0)
 
-
-extern u8 ef_event_add(EVENTTYPE e);
+extern err_t ef_post(event_t e);
+extern void ef_schedule_run(void);
 #endif // __TFRAME_H__
