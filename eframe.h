@@ -76,5 +76,5 @@ do {\
 } while(0)
 
 extern err_t ef_post(event_t e);
-extern void ef_schedule_run(void);
+extern void ef_scheduler_run(void);
 #endif // __TFRAME_H__

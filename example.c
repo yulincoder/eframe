@@ -52,12 +52,12 @@ void main(void)
   ef_post(EVENT_TIMER);
   ef_post(EVENT_WAKE);
   ef_post(EVENT_LCD); 
-  ef_schedule_run(); // 运行事件处理
+  ef_scheduler_run(); // 运行事件处理
   
   ef_post(EVENT_KEYSCAN);
   ef_post(EVENT_TIMER);
   ef_post(EVENT_WAKE);
   ef_post(EVENT_LCD);
-  ef_schedule_run();  
+  ef_scheduler_run();  
 }
 

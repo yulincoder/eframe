@@ -69,7 +69,7 @@ err_t ef_post(event_t e)
   return err;
 }
 
-void ef_schedule_run(void)
+void ef_scheduler_run(void)
 {
   event_t e = EFNONE_EVENT;
   while((e = ef_queue_poll()) != EFNONE_EVENT) {
