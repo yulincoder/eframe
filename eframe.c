@@ -1,26 +1,26 @@
 /**************************************************
- * Ç¶ÈëÊ½ÊÂ¼şÇı¶¯¿ò¼Ü
- *			 4.Ôö¼ÓÒ»¸öÔËĞĞÊ±¼à²âµ÷ÊÔ·½°¸
+ * åµŒå…¥å¼äº‹ä»¶é©±åŠ¨æ¡†æ¶
+ *			 4.å¢åŠ ä¸€ä¸ªè¿è¡Œæ—¶ç›‘æµ‹è°ƒè¯•æ–¹æ¡ˆ
  * 			 5. ...
  *
  */
 
     /*
-     * @API List£º
-     *                       efPROC(eventname) ¶¨ÒåÊÂ¼ş´¦Àíhandler
-     *                             ef_setevent(event_t event, num) //ÉèÖÃÓÃ»§ÊÂ¼ş±àºÅ
-     *                       ef_bindhandler(event, handler)                //°ó¶¨ÊÂ¼şÓëÏàÏìÓ¦³ÌĞò
-     *                                             handle_event(event_t event) //¸ù¾İÊÂ¼şÖ´ĞĞhandlerº¯Êı(ÔÚeframe.hÖĞºê¶¨Òå)
+     * @API Listï¼š
+     *                       efPROC(eventname) å®šä¹‰äº‹ä»¶å¤„ç†handler
+     *                             ef_setevent(event_t event, num) //è®¾ç½®ç”¨æˆ·äº‹ä»¶ç¼–å·
+     *                       ef_bindhandler(event, handler)                //ç»‘å®šäº‹ä»¶ä¸ç›¸å“åº”ç¨‹åº
+     *                                             handle_event(event_t event) //æ ¹æ®äº‹ä»¶æ‰§è¡Œhandlerå‡½æ•°(åœ¨eframe.hä¸­å®å®šä¹‰)
      *
      */
 #include "eframe.h"
 
-/* handlerº¯Êı¶¼×¢²áµ½´ËÊı×é  */
+/* handlerå‡½æ•°éƒ½æ³¨å†Œåˆ°æ­¤æ•°ç»„  */
 handler_t ef_handler_list[MAX_HANDLER_AMOUNT] = {
 	0
-};				//ÊÂ¼ş´¦Àíº¯ÊıÊı×é
+};				//äº‹ä»¶å¤„ç†å‡½æ•°æ•°ç»„
 
-// ÊÂ¼şÃ»ÓĞ¶ÔÓ¦µÄÏìÓ¦³ÌĞòµÄÊ±ºòÖ´ĞĞ¸Ãº¯Êı
+// äº‹ä»¶æ²¡æœ‰å¯¹åº”çš„å“åº”ç¨‹åºçš„æ—¶å€™æ‰§è¡Œè¯¥å‡½æ•°
 efPROC(ef_handle_null)
 {
 
@@ -29,12 +29,12 @@ efPROC(ef_handle_null)
 }
 
 /* 
- * ÊÂ¼ş¶ÓÁĞ²¿·Ö
- * ef_queue_size() ¶ÓÁĞÔªËØ³¤¶È
- * ef_queue_add(event)  ¶ÓÎ²×·¼Ó
- * ef_queue_poll()  È¡¶ÓÍ·
+ * äº‹ä»¶é˜Ÿåˆ—éƒ¨åˆ†
+ * ef_queue_size() é˜Ÿåˆ—å…ƒç´ é•¿åº¦
+ * ef_queue_add(event)  é˜Ÿå°¾è¿½åŠ 
+ * ef_queue_poll()  å–é˜Ÿå¤´
  */
-event_t ef_eventqueue[REAL_LEN] = { 0 };	// ´ı´¦ÀíÊÂ¼ş¶ÓÁĞ
+event_t ef_eventqueue[REAL_LEN] = { 0 };	// å¾…å¤„ç†äº‹ä»¶é˜Ÿåˆ—
 
 static event_t _tail = 0;
 static event_t _head = 0;
@@ -59,12 +59,13 @@ event_t ef_queue_poll()
 	return ef_eventqueue[_head = temp_head];
 }
 
-// ÊÂ¼ş´¥·¢²¿·Ö
+// äº‹ä»¶è§¦å‘éƒ¨åˆ†
 err_t ef_post(event_t e)
 {
 	err_t err = SUCCESS;
-	atomic(err = ef_queue_add(e);
-	    );
+	atomic(
+		err = ef_queue_add(e);
+	      );
 	return err;
 }
 
