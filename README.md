@@ -24,13 +24,16 @@
 
 ### Example:
 ```C
+xxx_it.c file
+-----------------------------------
 // 外部中断函数
 external interrupt function()
 {
     ef_post(KEY); 提交事件
 }
 
-main.c
+main.c file
+-----------------------------------
 //定义事件处理函数,
 efPROC(key_handler) {
     printf("The KEY1 is pressed.\n");
@@ -49,7 +52,6 @@ void main(void)
 
 ### 移植说明
 移植需要修改以下几处:
-
 1. eframe.h: #define MAX_HANDLER_AMOUNT n, n表示最大支持的事件数量, 该值不能大于2^8
 2. eframe.h: #define MAX_QUEUE n, n表示未处理事件队列的长度, 队列满后新事件将提交失败
 3. eframe.h: #define ef_idle() ... , 添加空闲任务, 一般添加处理器睡眠函数
