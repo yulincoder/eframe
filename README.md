@@ -35,9 +35,11 @@
 
 
 ### 系统默认事件:
-> uartdriver.h: EVENT_UART_EF 事件1. 当串口接收到"%hellor$"时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串"hello"
+1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"`
+
 
 ### Example:
+1. 
 ```C
 xxx_it.c file
 -----------------------------------
@@ -49,8 +51,10 @@ external interrupt function()
 
 main.c file
 -----------------------------------
+#include "eframe.h"
 //定义事件处理函数,
-efPROC(key_handler) {
+efPROC(key_handler)
+{
     printf("The KEY1 is pressed.\n");
 }
 
@@ -62,6 +66,38 @@ void main(void)
     while(1) {
         ef_scheduler_run(); //执行处理事件,没有事件发生则执行idle函数
     }
+}
+```
+2. 串口
+```C
+uart_it.c file
+-----------------------------------
+#include "uartdriver.h"
+uart interrupt function()
+{
+  ...
+  ef_tofaceuart(BUFF);
+  ...
+}
+
+main.c file
+-----------------------------------
+efPROC(uart_handler)
+{
+  static char buf[20] = {0};
+  ef_uart_recv(buf); // read the date from buffer
+  ef_uart_flush(); // flush the underly buffer
+  puts(buf); //
+}
+
+void main(void)
+{
+  ef_bindhandler(EVENT_UART_EF, uart_handler); //绑定串口事件与处理函数, 该事件为内置事件,不需要定义
+
+  while(1) {
+    // 如果收到 %hello$, 则可以看到将会输出 hello
+    ef_scheduler_run();
+  }
 }
 ```
 
