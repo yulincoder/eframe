@@ -43,10 +43,11 @@
 ```C 
 xxx_it.c file
 -----------------------------------
+#include "eframe.h"
 // 外部中断函数
 external interrupt function()
 {
-    ef_post(KEY); 提交事件
+    ef_post(KEY); //提交事件
 }
 
 main.c file
@@ -76,7 +77,7 @@ uart_it.c file
 uart interrupt function()
 {
   ...
-  ef_tofaceuart(BUFF);
+  ef_tofaceuart(BUFF); //当收到一个完整的% $组合时, 该函数内会提交EVENT_UART_EF事件
   ...
 }
 
