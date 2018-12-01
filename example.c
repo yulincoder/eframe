@@ -1,5 +1,14 @@
 #include <stdio.h>
 #include "eframe.h"
+#include "uartdriver.h"
+
+efPROC(uart_handler)
+{
+  static char buf[20] = {0};
+  ef_uart_recv(buf);
+  ef_uart_flush(); // flush the underly buffer
+  puts(buf);
+}
 
 efPROC(key_scan)
 {
@@ -31,6 +40,7 @@ void main(void)
 	event_t EVENT_TIMER = ef_event_init();
 	event_t EVENT_LCD = ef_event_init();
 	event_t EVENT_WAKE = ef_event_init();
+    char src1[] = {"%hello, world$"};
 
 	printf("%d, %d, %d, %d\n", EVENT_KEYSCAN, EVENT_TIMER, EVENT_LCD,
 	       EVENT_WAKE);
@@ -39,6 +49,9 @@ void main(void)
 	ef_bindhandler(EVENT_LCD, lcd_drvin);
 	ef_bindhandler(EVENT_WAKE, wake_esp8266);
 	ef_bindhandler(EVENT_TIMER, timer);
+
+    // bind the default event in eframe.
+    ef_bindhandler(EVENT_UART_EF, uart_handler);
 
 	ef_post(EVENT_KEYSCAN);	// 提交事件
 	ef_post(EVENT_TIMER);
@@ -58,5 +71,8 @@ void main(void)
 	ef_post(EVENT_TIMER);
 	ef_post(EVENT_WAKE);
 	ef_post(EVENT_LCD);
+    for(int i = 0; i < sizeof(src1);i++ )
+      ef_tofaceuart(src1[i]);
+   
 	ef_scheduler_run();
 }

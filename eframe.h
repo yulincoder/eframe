@@ -9,6 +9,7 @@ typedef enum {
   SUCCESS = 0,
   FAIL 
 } err_t;
+
  
 /*CH
  * 事件handler函数为void xx(void)
@@ -16,7 +17,12 @@ typedef enum {
 #define efPROC(event) void event(void)	// 定义事件处理函数的方式
 typedef void (*handler_t) (void);
  
-#define MAX_HANDLER_AMOUNT 10	// 最大处理事件过程数量
+#define MAX_HANDLER_AMOUNT 20	// 最大处理事件过程数量, 1-10为框架内置事件,因此该值至少为10, 其中各个事件为如下说明
+/* 
+uartdriver.h: EVENT_UART_EF 事件1
+ ... 待添加
+*/
+
     
 #define MAX_QUEUE 10
 // 队列头结点为哨兵,因此实际队列长度为有效数据长度+1
@@ -24,10 +30,10 @@ typedef void (*handler_t) (void);
     
 // 0作为无事件
 #define EFNONE_EVENT 0
-static event_t event_cnt = EFNONE_EVENT;
- 
+
+extern event_t event_cnt;
 // 初始化事件变量, 每次获得一个事件ID
-#define ef_event_init() ++event_cnt
+#define ef_event_init() event_cnt++ 
     
 /* 响应函数返回的状态码 */ 
 #define DEFAULT 0		//默认状态码（无意义）
@@ -55,11 +61,12 @@ do {\
  
 
 // 需要移植
-#define ef_idle()\
+/* #define ef_idle()\
 do {\
  printf("idle handler, MCU enter the halt()\n");\
 } while (0)
- 
+*/
+extern void ef_idle(void);
 // 需要移植
 // 设置原子操作,在进入时应该添加屏蔽中断代码,退出时恢复
 #define atomic(s) \
