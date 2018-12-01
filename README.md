@@ -39,8 +39,8 @@
 
 
 ### Example: 
-```C
-#### 1. 外部中断按钮example
+##### 1. 外部中断按钮example 
+```C 
 xxx_it.c file
 -----------------------------------
 // 外部中断函数
@@ -68,9 +68,8 @@ void main(void)
     }
 }
 ```
-2. 串口
+##### 2. 串口中断example 
 ```C
-#### 1. 串口中断example
 uart_it.c file
 -----------------------------------
 #include "uartdriver.h"
