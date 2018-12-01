@@ -14,7 +14,6 @@ event_t event_cnt = 10; // 1-10为框架内置事件,用户事件从11开始
 // 事件没有对应的响应程序的时候执行该函数
 efPROC(ef_handle_null)
 {
-
 	// do something to handle the event without handler
 	printf("null process function\n");	// For PC
 }
