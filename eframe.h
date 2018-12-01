@@ -11,64 +11,53 @@ typedef enum {
 } err_t;
 
  
-/*CH
- * ÊÂ¼şhandlerº¯ÊıÎªvoid xx(void)
- */ 
-#define efPROC(event) void event(void)	// ¶¨ÒåÊÂ¼ş´¦Àíº¯ÊıµÄ·½Ê½
+#define efPROC(event) void event(void)	// å®šä¹‰äº‹ä»¶å¤„ç†å‡½æ•°çš„æ–¹å¼
 typedef void (*handler_t) (void);
  
-#define MAX_HANDLER_AMOUNT 20	// ×î´ó´¦ÀíÊÂ¼ş¹ı³ÌÊıÁ¿, 1-10Îª¿ò¼ÜÄÚÖÃÊÂ¼ş,Òò´Ë¸ÃÖµÖÁÉÙÎª10, ÆäÖĞ¸÷¸öÊÂ¼şÎªÈçÏÂËµÃ÷
+#define MAX_HANDLER_AMOUNT 20	// æœ€å¤§å¤„ç†äº‹ä»¶è¿‡ç¨‹æ•°é‡, 1-10ä¸ºæ¡†æ¶å†…ç½®äº‹ä»¶,å› æ­¤è¯¥å€¼è‡³å°‘ä¸º10, å…¶ä¸­å„ä¸ªäº‹ä»¶ä¸ºå¦‚ä¸‹è¯´æ˜
 /* 
-uartdriver.h: EVENT_UART_EF ÊÂ¼ş1
- ... ´ıÌí¼Ó
+uartdriver.h: EVENT_UART_EF äº‹ä»¶1
+ ... å¾…æ·»åŠ 
 */
 
-    
+  
 #define MAX_QUEUE 10
-// ¶ÓÁĞÍ·½áµãÎªÉÚ±ø,Òò´ËÊµ¼Ê¶ÓÁĞ³¤¶ÈÎªÓĞĞ§Êı¾İ³¤¶È+1
-#define REAL_LEN MAX_QUEUE + 1	// ´ı´¦ÀíÊÂ¼ş¶ÓÁĞ³¤¶È
+// é˜Ÿåˆ—å¤´ç»“ç‚¹ä¸ºå“¨å…µ,å› æ­¤å®é™…é˜Ÿåˆ—é•¿åº¦ä¸ºæœ‰æ•ˆæ•°æ®é•¿åº¦+1
+#define REAL_LEN MAX_QUEUE + 1	// å¾…å¤„ç†äº‹ä»¶é˜Ÿåˆ—é•¿åº¦
     
-// 0×÷ÎªÎŞÊÂ¼ş
+// 0ä½œä¸ºæ— äº‹ä»¶
 #define EFNONE_EVENT 0
 
 extern event_t event_cnt;
-// ³õÊ¼»¯ÊÂ¼ş±äÁ¿, Ã¿´Î»ñµÃÒ»¸öÊÂ¼şID
+// åˆå§‹åŒ–äº‹ä»¶å˜é‡, æ¯æ¬¡è·å¾—ä¸€ä¸ªäº‹ä»¶ID
 #define ef_event_init() event_cnt++ 
     
-/* ÏìÓ¦º¯Êı·µ»ØµÄ×´Ì¬Âë */ 
-#define DEFAULT 0		//Ä¬ÈÏ×´Ì¬Âë£¨ÎŞÒâÒå£©
-#define NO_PROC 1		//Ã»ÓĞÏìÓ¦º¯Êı
+/* å“åº”å‡½æ•°è¿”å›çš„çŠ¶æ€ç  */ 
+#define DEFAULT 0		//é»˜è®¤çŠ¶æ€ç ï¼ˆæ— æ„ä¹‰ï¼‰
+#define NO_PROC 1		//æ²¡æœ‰å“åº”å‡½æ•°
     
-/* ÏìÓ¦³ÌĞò¶ÓÁĞ */ 
+/* å“åº”ç¨‹åºé˜Ÿåˆ— */ 
 extern handler_t ef_handler_list[MAX_HANDLER_AMOUNT];
   
-/* ÏìÓ¦º¯ÊıÓëÊÂ¼ş°ó¶¨ */ 
+/* å“åº”å‡½æ•°ä¸äº‹ä»¶ç»‘å®š */ 
 #define ef_bindhandler(event, handler) \
 do {\
  ef_handler_list[event] = handler;\
 } while (0)
  
-/**
- * »ñÈ¡ÊÂ¼ş¶ÔÓ¦µÄ´¦Àí½ø³Ì
- */ 
-extern efPROC(ef_handle_null);	// ¿Õ´¦Àíº¯Êı
+/* è·å–äº‹ä»¶å¯¹åº”çš„å¤„ç†è¿›ç¨‹ */ 
+extern efPROC(ef_handle_null);	// ç©ºå¤„ç†å‡½æ•°
 
-/* ¸ù¾İÊÂ¼ş,µ÷ÓÃ´¦ÀíÊÂ¼şµÄ¹ı³Ì»Øµ÷º¯Êı */ 
+/* æ ¹æ®äº‹ä»¶,è°ƒç”¨å¤„ç†äº‹ä»¶çš„è¿‡ç¨‹å›è°ƒå‡½æ•° */ 
 #define ef_handle_event(event)\
 do {\
  (ef_handler_list[event] ? ef_handler_list[event] : ef_handle_null) ();\
 } while (0)
  
-
-// ĞèÒªÒÆÖ²
-/* #define ef_idle()\
-do {\
- printf("idle handler, MCU enter the halt()\n");\
-} while (0)
-*/
 extern void ef_idle(void);
-// ĞèÒªÒÆÖ²
-// ÉèÖÃÔ­×Ó²Ù×÷,ÔÚ½øÈëÊ±Ó¦¸ÃÌí¼ÓÆÁ±ÎÖĞ¶Ï´úÂë,ÍË³öÊ±»Ö¸´
+
+// éœ€è¦ç§»æ¤
+// è®¾ç½®åŸå­æ“ä½œ,åœ¨è¿›å…¥æ—¶åº”è¯¥æ·»åŠ å±è”½ä¸­æ–­ä»£ç ,é€€å‡ºæ—¶æ¢å¤
 #define atomic(s) \
 do {\
  printf("enter atomic regeion\n");\
