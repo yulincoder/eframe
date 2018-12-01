@@ -38,9 +38,9 @@
 1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"`
 
 
-### Example:
-1. 
+### Example: 
 ```C
+#### 1. 外部中断按钮example
 xxx_it.c file
 -----------------------------------
 // 外部中断函数
@@ -70,6 +70,7 @@ void main(void)
 ```
 2. 串口
 ```C
+#### 1. 串口中断example
 uart_it.c file
 -----------------------------------
 #include "uartdriver.h"
