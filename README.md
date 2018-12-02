@@ -111,3 +111,4 @@ void main(void)
 5. eframe.c: efPROC(ef_handle_null){}, 该函数为事件没有绑定对应处理函数时默认调用的函数, 可以根据情况添加内容或者不添加内容
 6. 移植串口接收驱动: 在串口中断内调用void ef_tofaceuart(const u8 b)函数, 并将硬件缓冲区内的数据作为该函数参数. 使用该驱动接收数据需要包含在符号%$内,如%hello$, 可接收到字符串hello,并触发事件EVENT_UART_EF
 
+2018.12.2 v0.1
