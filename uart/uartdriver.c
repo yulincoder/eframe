@@ -1,7 +1,7 @@
 #include "uartdriver.h"
 static unsigned char ef_buf[UARTBUF_LEN] = {0};
 static int _idx = -1;
-ef_event_t EVENT_UART_EF = 1;
+ef_event_t EVENT_UART_EF = 9;
 
 /* 缓冲区满后会重复覆盖数据, 很对嵌入式个函数应该在串口中断中 */
 void ef_tofaceuart(const char b)

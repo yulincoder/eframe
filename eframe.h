@@ -10,13 +10,12 @@ typedef enum {
   efFAIL 
 } ef_err_t;
 
- 
 #define efPROC(event) void event(void)	// 定义事件处理函数的方式
 typedef void (*ef_handler_t) (void);
  
 #define efMAX_HANDLER_AMOUNT 20	// 最大处理事件过程数量, 1-10为框架内置事件,因此该值至少为10, 其中各个事件为如下说明
 /* 
-uartdriver.h: EVENT_UART_EF 事件1
+uartdriver.h: EVENT_UART_EF 事件9
  ... 待添加
 */
 
@@ -26,7 +25,11 @@ uartdriver.h: EVENT_UART_EF 事件1
 #define efREAL_LEN efMAX_QUEUE + 1	// 待处理事件队列长度
     
 // 0作为无事件
-#define efNONE_EVENT 0
+#define efEVENT_NULL 0
+#define efEVENT_SCH 1 // default event, to launch the scheduler
+#define booted main
+#define main_handler main
+
 
 extern ef_event_t ef_event_cnt;
 // 初始化事件变量, 每次获得一个事件ID
@@ -51,8 +54,10 @@ extern efPROC(ef_handle_null);	// 空处理函数
 /* 根据事件,调用处理事件的过程回调函数 */ 
 #define ef_handle_event(event)\
 do {\
- (ef_handler_list[event] ? ef_handler_list[event] : ef_handle_null) ();\
-} while (0)
+ switch(event) {\
+ case 1:ef_scheduler_run();\
+ default:(ef_handler_list[event] ? ef_handler_list[event] : ef_handle_null) (); \
+}} while (0)
 
 // post a synchronization event.
 // Execute handler immediately upon invocation.

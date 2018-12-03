@@ -12,7 +12,7 @@
  - [ ] 事件是否携带数据
 
 ### API List:
-> 提供`event_t` 和`err_t` 两种类型,其中`err_t`的值为`SUCCESS`和`FAIL`
+> 提供`ef_event_t` 和`ef_err_t` 两种类型,其中`ef_err_t`的值为`efSUCCESS`和`efFAIL`
 
 > `efPROC(handler) {}` 定义事件handler函数
 
@@ -21,6 +21,8 @@
 > `ef_bindhandler(event, handler)` 绑定事件与handler
 
 > `ef_post(event)` 提交事件
+
+> `ef_syncpost(event)` 提交同步事件,同步事件具有最高优先级,可以抢占一般事件
 
 > `ef_scheduler_run()` 执行scheduler, 调用绑定的handler,处理提交的事件
 
@@ -34,8 +36,10 @@
 > `void ef_uart_flush(void)` 清空底层接收缓存区
 
 
-### 系统默认事件:
-1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"`
+### 系统默认事件: (系统默认事件不需要使用`ef_bindhandler()`显式绑定)
+1. `main` 事件, 系统启动触发的第一个事件 ,初始化工作可以在main事件handler中
+2. `efEVENT_SCH`: 调度器事件, 在main_handler中完成初始化工作之后, 提交efEVENT_SCH同步事件以触发eframe调度器工作.
+~~ 1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"` ~~
 
 
 ### Example: 
@@ -59,14 +63,12 @@ efPROC(key_handler)
     printf("The KEY1 is pressed.\n");
 }
 
-void main(void)
+efPROC(main_handler) // 系统启动首先触发main事件,并执行该handler
 {
     event_t KEY = ef_event_init(); //定义并初始化一个事件
     ef_bindhandler(KEY, key_handler); //绑定按键事件与按键处理函数
 
-    while(1) {
-        ef_scheduler_run(); //执行处理事件,没有事件发生则执行idle函数
-    }
+    ef_syncpost(efEVENT_SCH); // 触发eframe调度器, 该事件为同步事件
 }
 ```
 ##### 2. 串口中断example 
@@ -91,14 +93,12 @@ efPROC(uart_handler)
   puts(buf); //
 }
 
-void main(void)
+efPROC(main_handler) // 系统启动首先触发main事件,并执行该handler
 {
   ef_bindhandler(EVENT_UART_EF, uart_handler); //绑定串口事件与处理函数, 该事件为内置事件,不需要定义
 
-  while(1) {
-    // 如果收到 %hello$, 则可以看到将会输出 hello
-    ef_scheduler_run();
-  }
+  // 触发eframe调度器, 该事件为同步事件  
+  ef_syncpost(efEVENT_SCH);
 }
 ```
 

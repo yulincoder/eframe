@@ -39,7 +39,7 @@ efPROC(sync)
   printf("\t synchronization event\n");
 }
 
-void main(void)
+efPROC(main_handler)
 {
 	ef_event_t EVENT_KEYSCAN = ef_event_init();	// 定义事件并初始化
 	ef_event_t EVENT_TIMER = ef_event_init();
@@ -75,7 +75,8 @@ void main(void)
 	ef_post(EVENT_TIMER);
 	ef_post(EVENT_WAKE);
 	ef_post(EVENT_LCD);
-	ef_scheduler_run();	// 运行事件处理
+// ef_scheduler_run();	// 运行事件处理
+    ef_syncpost(efEVENT_SCH); // post 调度事件
 
 	ef_post(EVENT_KEYSCAN);
 	ef_post(EVENT_TIMER);
@@ -83,6 +84,6 @@ void main(void)
 	ef_post(EVENT_LCD);
     for(int i = 0; i < sizeof(src1);i++ )
       ef_tofaceuart(src1[i]);
-   
-	ef_scheduler_run();
+    ef_syncpost(efEVENT_SCH);   
 }
+

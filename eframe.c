@@ -34,7 +34,7 @@ ef_event_t ef_queue_poll()
 {
 	ef_u8 temp_head = _head + 1 == efREAL_LEN ? 0 : _head + 1;
 	if (!ef_queue_size()) {
-		return efNONE_EVENT;
+		return efEVENT_NULL;
 	}
 	return ef_eventqueue[_head = temp_head];
 }
@@ -48,21 +48,24 @@ ef_err_t ef_post(const ef_event_t e)
 	      );
 	return err;
 }
-
-void ef_idle(void)
+/* 
+efPROC(ef_idle)
 {
 // while(ef_queue_size() == 0) {
     // halt()
     // printf("waked, but no event. continue sleep\n");
 // }
 }
+*/
 
-void ef_scheduler_run(void)
+efPROC(ef_scheduler_run)
 {
-	ef_event_t e = efNONE_EVENT;
-	while ((e = ef_queue_poll()) != efNONE_EVENT) {
-		ef_handle_event(e);
-	}
+	ef_event_t e = efEVENT_NULL;
+    // for( ;; ) {
+      while ((e = ef_queue_poll()) != efEVENT_NULL) {
+          ef_handle_event(e);
+      }
+    // }
 	// ef_idle();
 }
 
