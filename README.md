@@ -39,7 +39,7 @@
 ### 系统默认事件: (系统默认事件不需要使用`ef_bindhandler()`显式绑定)
 1. `main` 事件, 系统启动触发的第一个事件 ,初始化工作可以在main事件handler中
 2. `efEVENT_SCH`: 调度器事件, 在main_handler中完成初始化工作之后, 提交efEVENT_SCH同步事件以触发eframe调度器工作.
-~~ 1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"` ~~
+~~1. uartdriver.h: `EVENT_UART_EF` 事件1. 当串口接收到`"%hellor$"`时, 可以触发该事件,并可以从`ef_uart_recv(buf)`函数读到字符串`"hello"`
 
 
 ### Example: 
