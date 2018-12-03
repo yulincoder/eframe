@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "eframe.h"
-#include "uartdriver.h"
+#include "uart/uartdriver.h"
 
 efPROC(uart_handler)
 {
@@ -34,12 +34,18 @@ efPROC(timer)
 	printf("\tesp8266 has been waked: %d\n", x++);
 }
 
+efPROC(sync)
+{
+  printf("\t synchronization event\n");
+}
+
 void main(void)
 {
-	event_t EVENT_KEYSCAN = ef_event_init();	// 定义事件并初始化
-	event_t EVENT_TIMER = ef_event_init();
-	event_t EVENT_LCD = ef_event_init();
-	event_t EVENT_WAKE = ef_event_init();
+	ef_event_t EVENT_KEYSCAN = ef_event_init();	// 定义事件并初始化
+	ef_event_t EVENT_TIMER = ef_event_init();
+	ef_event_t EVENT_LCD = ef_event_init();
+	ef_event_t EVENT_WAKE = ef_event_init();
+	ef_event_t EVENT_SYNC = ef_event_init();    
     char src1[] = {"%hello, world$"};
 
 	printf("%d, %d, %d, %d\n", EVENT_KEYSCAN, EVENT_TIMER, EVENT_LCD,
@@ -53,6 +59,10 @@ void main(void)
     // bind the default event in eframe.
     ef_bindhandler(EVENT_UART_EF, uart_handler);
 
+	ef_bindhandler(EVENT_SYNC, sync);    
+
+    ef_syncpost(EVENT_SYNC);
+    
 	ef_post(EVENT_KEYSCAN);	// 提交事件
 	ef_post(EVENT_TIMER);
 	ef_post(EVENT_WAKE);

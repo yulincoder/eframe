@@ -2,47 +2,47 @@
 #define  __EFRAME_H__
 #include <stdio.h>		// For PC
 
-typedef unsigned int u16;
-typedef unsigned char u8;
-typedef u8 event_t;
+typedef unsigned int ef_u16;
+typedef unsigned char ef_u8;
+typedef ef_u8 ef_event_t;
 typedef enum {
-  SUCCESS = 0,
-  FAIL 
-} err_t;
+  efSUCCESS = 0,
+  efFAIL 
+} ef_err_t;
 
  
 #define efPROC(event) void event(void)	// 定义事件处理函数的方式
-typedef void (*handler_t) (void);
+typedef void (*ef_handler_t) (void);
  
-#define MAX_HANDLER_AMOUNT 20	// 最大处理事件过程数量, 1-10为框架内置事件,因此该值至少为10, 其中各个事件为如下说明
+#define efMAX_HANDLER_AMOUNT 20	// 最大处理事件过程数量, 1-10为框架内置事件,因此该值至少为10, 其中各个事件为如下说明
 /* 
 uartdriver.h: EVENT_UART_EF 事件1
  ... 待添加
 */
 
   
-#define MAX_QUEUE 10
+#define efMAX_QUEUE 10
 // 队列头结点为哨兵,因此实际队列长度为有效数据长度+1
-#define REAL_LEN MAX_QUEUE + 1	// 待处理事件队列长度
+#define efREAL_LEN efMAX_QUEUE + 1	// 待处理事件队列长度
     
 // 0作为无事件
-#define EFNONE_EVENT 0
+#define efNONE_EVENT 0
 
-extern event_t event_cnt;
+extern ef_event_t ef_event_cnt;
 // 初始化事件变量, 每次获得一个事件ID
-#define ef_event_init() event_cnt++ 
+#define ef_event_init() ef_event_cnt++ 
     
 /* 响应函数返回的状态码 */ 
-#define DEFAULT 0		//默认状态码（无意义）
-#define NO_PROC 1		//没有响应函数
+#define efDEFAULT 0		//默认状态码（无意义）
+#define efNO_PROC 1		//没有响应函数
     
 /* 响应程序队列 */ 
-extern handler_t ef_handler_list[MAX_HANDLER_AMOUNT];
+extern ef_handler_t ef_handler_list[efMAX_HANDLER_AMOUNT];
   
 /* 响应函数与事件绑定 */ 
-#define ef_bindhandler(event, handler) \
+#define ef_bindhandler(ef_event, ef_handler) \
 do {\
- ef_handler_list[event] = handler;\
+ ef_handler_list[ef_event] = ef_handler;\
 } while (0)
  
 /* 获取事件对应的处理进程 */ 
@@ -53,19 +53,24 @@ extern efPROC(ef_handle_null);	// 空处理函数
 do {\
  (ef_handler_list[event] ? ef_handler_list[event] : ef_handle_null) ();\
 } while (0)
- 
+
+// post a synchronization event.
+// Execute handler immediately upon invocation.
+// Synchronization event have the highest priority.
+#define ef_syncpost(event) ef_handle_event(event)
+
 extern void ef_idle(void);
 
 // 需要移植
 // 设置原子操作,在进入时应该添加屏蔽中断代码,退出时恢复
-#define atomic(s) \
+#define ef_atomic(s) \
 do {\
  printf("enter atomic regeion\n");\
  s \
  printf("exit atomic regeion\n");\
 } while (0)
 
-extern err_t ef_post(event_t e);
+extern ef_err_t ef_post(ef_event_t e);
 extern void ef_scheduler_run(void);
 
 #endif // __TFRAME_H__

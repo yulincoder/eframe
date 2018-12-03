@@ -1,12 +1,12 @@
 #include "uartdriver.h"
 static unsigned char ef_buf[UARTBUF_LEN] = {0};
 static int _idx = -1;
-event_t EVENT_UART_EF = 1;
+ef_event_t EVENT_UART_EF = 1;
 
 /* 缓冲区满后会重复覆盖数据, 很对嵌入式个函数应该在串口中断中 */
-void ef_tofaceuart(const u8 b)
+void ef_tofaceuart(const char b)
 {
-  static u8 flag = 0;
+  static char flag = 0;
   if(b == '$') {
     flag = 0;
     if( ++_idx >= UARTBUF_LEN - 1) {
