@@ -1,5 +1,7 @@
 ![eFrame](https://user-images.githubusercontent.com/10429180/49326426-1bc6b000-f58d-11e8-81a1-a65ba931b1a9.jpg)
-eframe is an event-driven programming framework for low power applications using 8-bit or 16 MCU.
+
+eframe is an event-driven programming framework for low power applications using 8-bit or 16 MCU
+
 [中文](https://github.com/yulincoder/eframe/blob/master/ZHREADME.md
 
 
