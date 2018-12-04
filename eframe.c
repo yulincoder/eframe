@@ -8,7 +8,8 @@
 ef_handler_t ef_handler_list[efMAX_HANDLER_AMOUNT] = {0}; 
 ef_event_t ef_event_cnt = 10; // 1-10为框架内置事件,用户事件从11开始
 
-// 事件没有对应的响应程序的时候执行该函数
+
+// When an event has no binded to any handler by coder, this handler is given it.
 efPROC(ef_handle_null)
 {
 	// do something to handle the event without handler
@@ -48,15 +49,6 @@ ef_err_t ef_post(const ef_event_t e)
 	      );
 	return err;
 }
-/* 
-efPROC(ef_idle)
-{
-// while(ef_queue_size() == 0) {
-    // halt()
-    // printf("waked, but no event. continue sleep\n");
-// }
-}
-*/
 
 efPROC(ef_scheduler_run)
 {

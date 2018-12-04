@@ -108,7 +108,8 @@ efPROC(main_handler) // 系统启动首先触发main事件,并执行该handler
 1. eframe.h: #define MAX_HANDLER_AMOUNT n, n表示最大支持的事件数量, 该值不能大于2^8, 且不能小于11, 系统默认占用1-10事件
 2. eframe.h: #define MAX_QUEUE n, n表示未处理事件队列的长度, 队列满后新事件将提交失败
 3. eframe.c: void ef_idle() { } , 添加空闲任务, 一般添加处理器睡眠函数
-4. eframe.h: #define atomic(s) ... , 在开头行添加屏蔽中断函数, 结尾行取消屏蔽中断函数
+4. eframe.h: efENTER_ATOMIC, efEXIT_ATOMIC, 定义为关闭与打开中断函数
+~~4. eframe.h: #define atomic(s) ... , 在开头行添加屏蔽中断函数, 结尾行取消屏蔽中断函数~~
 5. eframe.c: efPROC(ef_handle_null){}, 该函数为事件没有绑定对应处理函数时默认调用的函数, 可以根据情况添加内容或者不添加内容
 6. 移植串口接收驱动: 在串口中断内调用void ef_tofaceuart(const u8 b)函数, 并将硬件缓冲区内的数据作为该函数参数. 使用该驱动接收数据需要包含在符号%$内,如%hello$, 可接收到字符串hello,并触发事件EVENT_UART_EF
 
