@@ -1,6 +1,8 @@
 ![eFrame](https://user-images.githubusercontent.com/10429180/49326426-1bc6b000-f58d-11e8-81a1-a65ba931b1a9.jpg)
+eframe is an event-driven programming framework for low power applications using 8-bit or 16 MCU.
+[中文](https://github.com/yulincoder/eframe/blob/master/ZHREADME.md
 
-[中文](https://github.com/yulincoder/eframe/blob/master/ZHREADME.md)
+
 ### TODO:
  - [X] handler dynamic binding
  - [ ] Supports the `handle_done` event (maybe refer to the TinyOS)
@@ -24,7 +26,7 @@
 
 > `ef_idle()` idle handler
 
-### Serial post API:
+### Serial port API:
 > `void ef_tofaceuart(const u8 b)` place the function to the interrupt of usart.
 
 > `void ef_uart_recv(char *buf)` read the data in underlying buffer to `buf`.
