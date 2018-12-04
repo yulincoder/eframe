@@ -9,10 +9,12 @@
 #define efMAX_HANDLER_AMOUNT 20
 /**
  * default events in eframe in the range of 1-10:
- *  > event 1: main
+ *  > event <nil>: booted
  *             The same as main function. The first event posted by the MCU when it starts.
  *             User need to declare the `efPROC(main_handler){ ... }` to process the main event.
- *  > event 2: ... 
+ *  > event 1: efEVENT_SCH
+ *             That sync post the event will tigger the schudler of eframe.  
+ *  > event 2: ...
  */
   
 #define efMAX_QUEUE_LEN 10 // 
