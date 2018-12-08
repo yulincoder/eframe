@@ -55,7 +55,7 @@ external interrupt function()
 main.c file
 -----------------------------------
 #include "eframe.h"
-// Define the handler in order to process KEY event
+// Define the handler in order to process a KEY event
 efPROC(key_handler)
 {
     printf("The KEY1 is pressed.\n");
@@ -66,7 +66,7 @@ efPROC(booted) // define the handler related `booted`
     event_t KEY = ef_event_init(); // allocate a unique ID to event.
     ef_bindhandler(KEY, key_handler); //bind the key handler to KEY event.
 
-    ef_syncpost(efEVENT_SCH); // tigger the schudler of eframe.
+    ef_syncpost(efEVENT_SCH); // tigger the scheduler of eframe.
 }
 ```
 ##### 2. Serial example 
