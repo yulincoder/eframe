@@ -2,7 +2,7 @@
 
 eframe is an event-driven programming framework for low power applications using 8-bit or 16 MCU
 
-[中文](https://github.com/yulincoder/eframe/blob/master/ZHREADME.md)
+[中文](https://github.com/yulincoder/eframe/blob/master/CNREADME.md)
 
 
 ### TODO:
@@ -55,6 +55,7 @@ external interrupt function()
 main.c file
 -----------------------------------
 #include "eframe.h"
+
 // Define the handler in order to process a KEY event
 efPROC(key_handler)
 {
@@ -74,6 +75,7 @@ efPROC(booted) // define the handler related `booted`
 uart_it.c file
 -----------------------------------
 #include "uartdriver.h"
+
 uart interrupt function()
 {
   ...

@@ -49,8 +49,8 @@
 xxx_it.c file
 -----------------------------------
 #include "eframe.h"
-// 外部中断函数
-external interrupt function()
+
+external interrupt function() // 外部中断函数
 {
     ef_post(KEY); //提交事件
 }
@@ -58,8 +58,8 @@ external interrupt function()
 main.c file
 -----------------------------------
 #include "eframe.h"
-//定义事件处理函数,
-efPROC(key_handler)
+
+efPROC(key_handler) //定义事件处理函数,
 {
     printf("The KEY1 is pressed.\n");
 }
@@ -77,6 +77,7 @@ efPROC(main_handler) // 系统启动首先触发main事件,并执行该handler
 uart_it.c file
 -----------------------------------
 #include "uartdriver.h"
+
 uart interrupt function()
 {
   ...
