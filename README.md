@@ -40,7 +40,7 @@ eframe is an event-driven programming framework for low power applications using
 1. `booted` The same as main function. The first event posted by the MCU when it starts.
 2. `efEVENT_SCH`: That synchronously post the event will tigger the schudler of eframe.  
 
-### Example: 
+### Examples: 
 ##### 1. External interrpt example 
 ```C 
 xxx_it.c file
@@ -100,4 +100,3 @@ efPROC(booted)
 }
 ```
 
-2018.12.2 v0.1
